@@ -1,0 +1,13 @@
+[theme]
+base = "dark"
+primaryColor = "#C8F169"
+backgroundColor = "#0B110F"
+secondaryBackgroundColor = "#131B18"
+textColor = "#ECEAE2"
+borderColor = "#24302B"
+baseRadius = "10px"
+font = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+codeFont = "JetBrains Mono:https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
+
+[client]
+toolbarMode = "minimal"
