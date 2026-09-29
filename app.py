@@ -59,6 +59,16 @@ TAG_ALIASES = {
 IGNORED_TAGS = {"editor's picks", "deep dives"}
 ACRONYMS = {"ai", "llm", "llms", "rag", "sql", "etl", "elt", "api", "ml", "gpu", "cdf"}
 
+# Team section + footer credits
+TEAM = [
+    {"name": "Mouath Alosaimi", "role": "Data Engineer",
+     "email": "mouath1424@gmail.com", "linkedin": "https://www.linkedin.com/in/mouath-alosaimi"},
+    {"name": "Azam Alzahrani", "role": "Data Engineer",
+     "email": "azamalzahrani80@gmail.com", "linkedin": "https://www.linkedin.com/in/azam--alzahrani"},
+]
+REPO_URL = "https://github.com/AzamAlzahrani/FOMOless"
+PROGRAM = "Saudi Digital Academy · Data Engineering Bootcamp 2026"
+
 st.set_page_config(
     page_title="FoMoLess — Trend Radar",
     page_icon=":material/radar:",
@@ -386,6 +396,7 @@ def render_nav(overview: dict) -> None:
       <nav class="fl-links">
         <a href="#spotlight">Today's #1</a><a href="#topics">Topics</a>
         <a href="#explore">Explore</a><a href="#sources">Sources</a><a href="#subscribe">Digest</a>
+        <a href="#team">Team</a>
       </nav>
       {status}
     </div>""")
@@ -534,10 +545,109 @@ def render_sources(catalog: list[dict]) -> None:
     <div class="fl fl-sources">{"".join(tiles)}</div>""")
 
 
+# Styles for the team section and footer credits. They live here (not in
+# styles.css) so the whole feature is contained in this file.
+TEAM_CSS = """
+.fl-team { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.1rem; margin-bottom: 3.5rem; }
+.fl-member {
+  display: flex; gap: 1.3rem; align-items: flex-start;
+  padding: 1.6rem 1.7rem;
+  border: 1px solid var(--line); border-radius: 18px;
+  background: linear-gradient(135deg, rgba(200, 241, 105, .06), transparent 50%), var(--surface);
+  transition: border-color .2s;
+}
+.fl-member:hover { border-color: #3A4A43; }
+.fl-avatar {
+  flex: none; width: 3.6rem; height: 3.6rem; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 1.05rem; font-weight: 600; letter-spacing: .04em;
+  color: var(--signal-text); background: var(--signal-soft); border: 1px solid rgba(200, 241, 105, .35);
+}
+.fl-member-body { min-width: 0; flex: 1; }
+.fl-member-name { font-family: var(--serif); font-size: 1.85rem; line-height: 1.1; color: var(--text); }
+.fl-member-role {
+  font-family: var(--mono); font-size: .72rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--muted); margin: .35rem 0 1.1rem;
+}
+.fl-member-links { display: flex; flex-wrap: wrap; gap: .55rem; }
+.fl-member-links .fl-btn { padding: .5rem .95rem; font-size: .84rem; font-weight: 500; }
+.fl-member-links .fl-btn { gap: .55rem; }
+.fl-logo { display: block; width: 20px; height: 20px; flex: none; border-radius: 3px; }
+.fl-logo.gmail { width: 20px; height: 15px; border-radius: 0; }
+.fl-member-links .fl-linkedin {
+  background: #0A66C2; color: #FFFFFF !important; font-weight: 600;
+  border: 1px solid #0A66C2; box-shadow: 0 4px 14px rgba(10, 102, 194, .35);
+  transition: background .2s, transform .2s;
+}
+.fl-member-links .fl-linkedin:hover { background: #0B77E0; border-color: #0B77E0; color: #FFFFFF !important; transform: translateY(-1px); }
+.fl-member-links .fl-btn:hover { border-color: var(--signal); color: var(--signal-text) !important; }
+.fl-foot-credit { flex-basis: 100%; color: var(--dim); line-height: 1.7; }
+.fl-foot-credit a { color: var(--muted) !important; }
+.fl-foot-credit a:hover { color: var(--signal-text) !important; }
+@media (max-width: 900px) {
+  .fl-team { grid-template-columns: 1fr; }
+  .fl-member { padding: 1.3rem 1.2rem; }
+}
+"""
+
+# Official Gmail / LinkedIn logos (supplied by the team), embedded so no extra files are needed.
+GMAIL_LOGO = "data:image/png;base64,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"
+LINKEDIN_LOGO = "data:image/png;base64,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"
+
+
+def initials(name: str) -> str:
+    return "".join(part[0] for part in name.split()[:2]).upper()
+
+
+def no_autolink(text: str) -> str:
+    """Escapes text and encodes '@' so Streamlit's markdown doesn't wrap an
+    email address in a second, nested link."""
+    return esc(text).replace("@", "&#64;")
+
+
+def render_team() -> None:
+    cards = "".join(f"""
+      <div class="fl-member">
+        <div class="fl-avatar" aria-hidden="true">{esc(initials(m["name"]))}</div>
+        <div class="fl-member-body">
+          <div class="fl-member-name" role="heading" aria-level="3">{esc(m["name"])}</div>
+          <div class="fl-member-role">{esc(m["role"])}</div>
+          <div class="fl-member-links">
+            <a class="fl-btn fl-btn-ghost" href="mailto:{esc(m["email"])}"><img class="fl-logo gmail" src="{GMAIL_LOGO}" alt="Gmail">{no_autolink(m["email"])}</a>
+            <a class="fl-btn fl-linkedin" href="{esc(safe_url(m["linkedin"]))}" target="_blank" rel="noopener" aria-label="{esc(m["name"])} on LinkedIn"><img class="fl-logo" src="{LINKEDIN_LOGO}" alt="">Connect on LinkedIn</a>
+          </div>
+        </div>
+      </div>""" for m in TEAM)
+    html_block(f"""
+    <div class="fl fl-section" id="team">
+      <div class="fl-eyebrow">The team</div>
+      <div class="fl-h2" role="heading" aria-level="2">The people behind the radar</div>
+      <div class="fl-sub">FoMoLess is our team project at the Saudi Digital Academy Data Engineering Bootcamp.
+      Questions, feedback or opportunities? We’d love to hear from you.</div>
+    </div>
+    <div class="fl fl-team">{cards}</div>""")
+
+
+def render_footer(overview: dict) -> None:
+    names = " &amp; ".join(
+        f'<a href="{esc(safe_url(m["linkedin"]))}" target="_blank" rel="noopener">{esc(m["name"])}</a>'
+        for m in TEAM
+    )
+    refreshed = "" if MOCK_MODE else " · last run " + esc(riyadh_label(overview["last_refresh"]))
+    html_block(f"""
+    <div class="fl fl-foot">
+      <span>© {datetime.now(RIYADH).year} FoMoLess</span>
+      <span>Databricks · Delta Lake · Azure Data Factory · MongoDB Atlas</span>
+      <span>Data refreshed daily{refreshed}</span>
+      <div class="fl-foot-credit">Built by {names} · {esc(PROGRAM)} ·
+        <a href="{esc(REPO_URL)}" target="_blank" rel="noopener">Source code on GitHub ↗</a></div>
+    </div>""")
+
+
 # =============================================================================
 # 5. PAGE
 # =============================================================================
-st.markdown(f"<style>{(Path(__file__).parent / 'styles.css').read_text()}</style>", unsafe_allow_html=True)
+st.markdown(f"<style>{(Path(__file__).parent / 'styles.css').read_text()}{TEAM_CSS}</style>", unsafe_allow_html=True)
 
 def render_data_error(message: str) -> None:
     html_block(f"""
@@ -663,9 +773,6 @@ with st.container(key="subscribe"):
                 else:
                     st.info(f"{email} is already subscribed. See you at 06:00.")
 
-html_block(f"""
-<div class="fl fl-foot">
-  <span>FoMoLess</span>
-  <span>Databricks · Delta Lake · Azure Data Factory · MongoDB Atlas</span>
-  <span>Data refreshed daily{'' if MOCK_MODE else ' · last run ' + esc(riyadh_label(overview["last_refresh"]))}</span>
-</div>""")
+# ---- Team + footer ----
+render_team()
+render_footer(overview)
