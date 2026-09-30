@@ -420,7 +420,7 @@ def render_hero(overview: dict, topics: dict) -> None:
     html_block(f"""
     <div class="fl fl-hero">
       <div>
-        <div class="fl-h1" role="heading" aria-level="1">Stop scrolling.<br><em>Start knowing.</em></div>
+        <div class="fl-h1" role="heading" aria-level="1">Stop scrolling.<br><em>Start Reading, then Knowing.</em></div>
         <p class="fl-lede">Every morning, FoMoLess turns {overview["sources"]} tech sources into one trend digest
         you can read in about 5 minutes. The top articles are ranked here.</p>
         <div class="fl-hero-cta">
